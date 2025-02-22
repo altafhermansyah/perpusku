@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('kategoriBuku_relasi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bukuId')->references('id')->on('buku');
-            $table->foreignId('kategoriId')->references('id')->on('kategoriBuku');
+            $table->foreignId('buku_id')->references('id')->on('buku');
+            $table->foreignId('kategori_id')->references('id')->on('kategoriBuku');
             $table->timestamps();
         });
     }

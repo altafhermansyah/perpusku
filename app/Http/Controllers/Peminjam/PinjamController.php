@@ -21,9 +21,20 @@ class PinjamController extends Controller
 
     public function iventaris()
     {
-        $peminjaman = Peminjaman::where('userId', Auth::user()->id)->latest()->get();
-        return view('menu.iventaris', compact('peminjaman'));
+        $userId = Auth::id();
+        $status = request('status', 'dipinjam');
+        $query = Buku::whereHas('peminjaman', function ($query) use ($userId, $status) {
+            if ($status !== 'semua') {
+                $query->where('user_id', $userId)->where('statusPeminjaman', $status);
+            } else {
+                $query->where('user_id', $userId);
+            }
+        });
+
+        $buku = $query->with(['peminjaman', 'ulasan'])->latest()->paginate(9);
+        return view('menu.iventaris', compact('buku'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -45,8 +56,8 @@ class PinjamController extends Controller
 
         $status = 'proses';
         $buku = Peminjaman::create([
-            'userId' => $request->input('user'),
-            'bukuId' => $request->input('buku'),
+            'user_id' => $request->input('user'),
+            'buku_id' => $request->input('buku'),
             'statusPeminjaman' => $status,
         ]);
 

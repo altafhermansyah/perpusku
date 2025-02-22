@@ -13,6 +13,6 @@ class Kategori extends Model
 
     public function kategoriBuku()
     {
-        return $this->hasMany(kategoriBuku::class, 'kategoriId');
+        return $this->hasMany(kategoriBuku::class);
     }
 }

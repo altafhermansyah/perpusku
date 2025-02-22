@@ -24,13 +24,10 @@
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $b->judul }} ({{ $b->tahunTerbit }})</h5>
-                                            <p class="card-text">Penulis: {{ $b->penulis }}
-                                            <div class="d-flex align-items-center gap-2">
-                                                Penerbit:
-                                                <span
-                                                    class="badge bg-primary rounded-3 fw-semibold">{{ $b->penerbit }}</span>
-                                            </div>
-                                            </p>
+                                            @foreach ($b->kategoribuku as $kb)
+                                                <span class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span>
+                                            @endforeach
+                                            <p class="card-text mt-2">Penulis: <b>{{ $b->penulis }}</b></p>
                                             <button type="button" class="btn btn-primary m-1" data-bs-toggle="modal"
                                                 data-bs-target="#editData{{ $b->id }}"><i
                                                     class="ti ti-edit me-2"></i>Edit</button>
@@ -97,17 +94,19 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Tahun Terbit</span>
-                            <input type="number" class="form-control" name="tahun"
-                                placeholder="Masukkan Tahun Terbit" aria-label="Tahun Terbit"
-                                aria-describedby="basic-addon1" required>
+                            <select class="form-control" name="tahun" id="tahunTerbit" required>
+                                <option value="" disabled selected>Pilih Tahun</option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Pilih Kategori</label><br>
                             @foreach ($kategori as $k)
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="kategori[]" value="{{ $k->id }}" id="kategori{{ $k->id }}">
-                                    <label class="form-check-label" for="kategori{{ $k->id }}">{{ $k->nama }}</label>
+                                    <input class="form-check-input" type="checkbox" name="kategori[]"
+                                        value="{{ $k->id }}" id="kategori{{ $k->id }}">
+                                    <label class="form-check-label"
+                                        for="kategori{{ $k->id }}">{{ $k->nama }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -163,13 +162,6 @@
                                     aria-describedby="basic-addon1" value="{{ $b->penerbit }}" required>
                             </div>
 
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">Tahun Terbit</span>
-                                <input type="number" class="form-control" name="tahun"
-                                    placeholder="Masukkan Tahun Terbit" aria-label="Tahun Terbit"
-                                    aria-describedby="basic-addon1" value="{{ $b->tahunTerbit }}" required>
-                            </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Kategori</label>
                                 <div class="d-flex flex-wrap">
@@ -184,8 +176,9 @@
                                             }
                                         @endphp
                                         <div class="form-check me-3">
-                                            <input class="form-check-input" type="checkbox" name="kategori[]" value="{{ $k->id }}"
-                                                id="kategori{{ $k->id }}" {{ $checked }}>
+                                            <input class="form-check-input" type="checkbox" name="kategori[]"
+                                                value="{{ $k->id }}" id="kategori{{ $k->id }}"
+                                                {{ $checked }}>
                                             <label class="form-check-label" for="kategori{{ $k->id }}">
                                                 {{ $k->nama }}
                                             </label>
@@ -194,6 +187,12 @@
                                 </div>
                             </div>
 
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Tahun Terbit</span>
+                                <input type="number" class="form-control" name="tahun"
+                                    placeholder="Masukkan Tahun Terbit" aria-label="Tahun Terbit"
+                                    aria-describedby="basic-addon1" value="{{ $b->tahunTerbit }}" required>
+                            </div>
 
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Input Gambar</label>
@@ -233,4 +232,16 @@
             </div>
         </div>
     @endforeach
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectTahun = document.getElementById("tahunTerbit");
+            let tahunSekarang = new Date().getFullYear();
+            for (let i = tahunSekarang; i >= 1945; i--) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.textContent = i;
+                selectTahun.appendChild(option);
+            }
+        });
+    </script>
 @endsection

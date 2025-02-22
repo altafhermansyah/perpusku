@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use App\Models\Buku;
-use App\Models\Kategori;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
-class kategoriBuku extends Model
+class Ulasan extends Model
 {
-    protected $table = 'kategoriBuku_relasi';
+    protected $table = 'ulasanbuku';
 
     protected $guarded = [];
 
@@ -17,8 +17,8 @@ class kategoriBuku extends Model
         return $this->belongsTo(Buku::class);
     }
 
-    public function kategori()
+    public function user()
     {
-        return $this->belongsTo(Kategori::class);
+        return $this->belongsTo(User::class);
     }
 }

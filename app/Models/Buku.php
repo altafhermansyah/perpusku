@@ -14,10 +14,14 @@ class Buku extends Model
 
     public function kategoriBuku()
     {
-        return $this->hasMany(kategoriBuku::class, 'bukuId');
+        return $this->hasMany(kategoriBuku::class);
     }
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'bukuId');
+        return $this->hasMany(Peminjaman::class);
+    }
+    public function ulasan()
+    {
+        return $this->hasMany(Ulasan::class);
     }
 }

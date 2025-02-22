@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('ulasanBuku', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('userId')->references('id')->on('users');
-            $table->foreignId('bukuId')->references('id')->on('buku');
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('buku_id')->references('id')->on('buku');
             $table->text('ulasan');
             $table->integer('rating');
             $table->timestamps();

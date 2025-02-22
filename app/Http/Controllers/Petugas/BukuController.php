@@ -16,7 +16,7 @@ class BukuController extends Controller
      */
     public function index()
     {
-        $buku = Buku::latest()->paginate(6);
+        $buku = Buku::with('kategoribuku.kategori')->latest()->paginate(6);
         $kategori = Kategori::all();
         return view('manage.buku', compact('buku', 'kategori'));
     }
@@ -60,8 +60,8 @@ class BukuController extends Controller
         if ($request->has('kategori')) {
             foreach ($request->kategori as $kategoriId) {
                 KategoriBuku::create([
-                    'bukuId' => $buku->id,
-                    'kategoriId' => $kategoriId,
+                    'buku_id' => $buku->id,
+                    'kategori_id' => $kategoriId,
                 ]);
             }
         }
@@ -120,19 +120,19 @@ class BukuController extends Controller
 
         if ($request->has('kategori')) {
             $kategoriBaru = $request->kategori; // Array kategori yang dipilih
-            $kategoriLama = $group->kategoriBuku->pluck('kategoriId')->toArray(); // Array kategori di database
+            $kategoriLama = $group->kategoriBuku->pluck('kategori_id')->toArray(); // Array kategori di database
 
             // **Hapus kategori yang tidak dipilih lagi**
             $hapusKategori = array_diff($kategoriLama, $kategoriBaru);
             if (!empty($hapusKategori)) {
-                $group->kategoriBuku()->whereIn('kategoriId', $hapusKategori)->delete();
+                $group->kategoriBuku()->whereIn('kategori_id', $hapusKategori)->delete();
             }
 
             // **Tambahkan kategori baru yang belum ada**
             $tambahKategori = array_diff($kategoriBaru, $kategoriLama);
             foreach ($tambahKategori as $kategoriId) {
                 $group->kategoriBuku()->create([
-                    'kategoriId' => $kategoriId
+                    'kategori_id' => $kategoriId
                 ]);
             }
         }

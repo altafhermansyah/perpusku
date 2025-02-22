@@ -5,10 +5,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Petugas\BukuController;
 use App\Http\Controllers\Admin\KategoriController;
-use App\Http\Controllers\Admin\PeminjamanController;
-use App\Http\Controllers\Petugas\PetugasController;
-use App\Http\Controllers\Peminjam\PeminjamController;
 use App\Http\Controllers\Peminjam\PinjamController;
+use App\Http\Controllers\Peminjam\UlasanController;
+use App\Http\Controllers\Petugas\PetugasController;
+use App\Http\Controllers\Admin\PeminjamanController;
+use App\Http\Controllers\Peminjam\PeminjamController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,6 +47,7 @@ Route::middleware('auth', 'peminjamMiddleware')->group(function(){
     Route::get('/dashboard', [PeminjamController::class, 'index'])->name('dashboard');
     Route::get('/iventaris', [PinjamController::class, 'iventaris'])->name('iventaris');
     Route::resource('list', PinjamController::class);
+    Route::resource('ulasan', UlasanController::class);
 });
 
 // // Admin and Petugas Routes

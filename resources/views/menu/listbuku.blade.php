@@ -19,14 +19,11 @@
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $b->judul }} ({{ $b->tahunTerbit }})</h5>
-                                            <p class="card-text">Penulis: {{ $b->penulis }}
-                                            <div class="d-flex align-items-center gap-2">
-                                                Penerbit:
-                                                <span
-                                                    class="badge bg-primary rounded-3 fw-semibold">{{ $b->penerbit }}</span>
-                                            </div>
-                                            </p>
-                                            @if ($b->peminjaman->contains('userId', Auth::id()))
+                                            @foreach ($b->kategoribuku as $kb)
+                                                <span class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span>
+                                            @endforeach
+                                            <p class="card-text mt-2">Penulis: <b>{{ $b->penulis }}</b></p>
+                                            @if ($b->peminjaman->contains('user_id', Auth::id()))
                                                 <button type="button" class="btn btn-success m-1" data-bs-toggle="modal"
                                                     data-bs-target="#pinjam{{ $b->id }}" disabled><i
                                                         class="ti ti-vocabulary me-2"></i>Pinjam</button>
