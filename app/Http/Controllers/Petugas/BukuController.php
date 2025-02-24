@@ -119,16 +119,14 @@ class BukuController extends Controller
         ]);
 
         if ($request->has('kategori')) {
-            $kategoriBaru = $request->kategori; // Array kategori yang dipilih
-            $kategoriLama = $group->kategoriBuku->pluck('kategori_id')->toArray(); // Array kategori di database
+            $kategoriBaru = $request->kategori;
+            $kategoriLama = $group->kategoriBuku->pluck('kategori_id')->toArray();
 
-            // **Hapus kategori yang tidak dipilih lagi**
             $hapusKategori = array_diff($kategoriLama, $kategoriBaru);
             if (!empty($hapusKategori)) {
                 $group->kategoriBuku()->whereIn('kategori_id', $hapusKategori)->delete();
             }
 
-            // **Tambahkan kategori baru yang belum ada**
             $tambahKategori = array_diff($kategoriBaru, $kategoriLama);
             foreach ($tambahKategori as $kategoriId) {
                 $group->kategoriBuku()->create([
@@ -148,7 +146,8 @@ class BukuController extends Controller
         $group = Buku::findOrFail($id);
 
         $group->kategoriBuku()->delete();
-        // kategoriBuku::where('bukuId', $group->id)->delete();
+        $group->peminjaman()->delete();
+        $group->ulasan()->delete();
 
         if ($group->gambar) {
             Storage::disk('public')->delete($group->gambar);

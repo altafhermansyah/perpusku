@@ -13,7 +13,7 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        $peminjaman = Peminjaman::all();
+        $peminjaman = Peminjaman::latest()->get();
         return view('manage.peminjaman', compact('peminjaman'));
     }
 
@@ -62,7 +62,7 @@ class PeminjamanController extends Controller
             'tanggalPengembalian' => $request->input('tanggalKembali'),
         ]);
 
-        return back()->with('success', 'Kategori berhasil diedit!');
+        return back()->with('success', 'Peminjaman Berhasil di Acc!');
     }
 
     /**

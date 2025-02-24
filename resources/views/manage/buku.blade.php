@@ -25,7 +25,7 @@
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $b->judul }} ({{ $b->tahunTerbit }})</h5>
                                             @foreach ($b->kategoribuku as $kb)
-                                                <span class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span>
+                                                <a href=""><span class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span></a>
                                             @endforeach
                                             <p class="card-text mt-2">Penulis: <b>{{ $b->penulis }}</b></p>
                                             <button type="button" class="btn btn-primary m-1" data-bs-toggle="modal"
@@ -168,8 +168,8 @@
                                     @foreach ($kategori as $k)
                                         @php
                                             $checked = false;
-                                            foreach ($b->kategoriBuku as $bk) {
-                                                if ($bk->kategoriId == $k->id) {
+                                            foreach ($b->kategoribuku as $bk) {
+                                                if ($bk->kategori_id == $k->id) {
                                                     $checked = 'checked';
                                                     break;
                                                 }
@@ -177,9 +177,9 @@
                                         @endphp
                                         <div class="form-check me-3">
                                             <input class="form-check-input" type="checkbox" name="kategori[]"
-                                                value="{{ $k->id }}" id="kategori{{ $k->id }}"
+                                                value="{{ $k->id }}" id="kategori{{ $k->nama }}"
                                                 {{ $checked }}>
-                                            <label class="form-check-label" for="kategori{{ $k->id }}">
+                                            <label class="form-check-label" for="kategori{{ $k->nama }}">
                                                 {{ $k->nama }}
                                             </label>
                                         </div>

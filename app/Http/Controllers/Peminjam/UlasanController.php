@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Peminjam;
 
-use App\Http\Controllers\Controller;
 use App\Models\Ulasan;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class UlasanController extends Controller
 {
@@ -32,11 +34,17 @@ class UlasanController extends Controller
         $request->validate([
             'rating' => 'required|integer',
             'komentar' => 'required|string',
+            'buku_id' => [
+                'required',
+                Rule::unique('ulasanbuku')->where(function ($query) use ($request) {
+                    return $query->where('user_id', Auth::id());
+                }),
+            ],
         ]);
 
         $ulasan = Ulasan::create([
-            'userID' => $request->input('user_id'),
-            'bukuID' => $request->input('buku_id'),
+            'user_id' => Auth::id(),
+            'buku_id' => $request->input('buku_id'),
             'rating' => $request->input('rating'),
             'ulasan' => $request->input('komentar'),
         ]);
@@ -44,7 +52,7 @@ class UlasanController extends Controller
         if ($ulasan) {
             return back()->with(['success' => 'Terimakasih atas ulasanmu ya :3']);
         } else {
-            return back()->with(['error' => 'error']);
+            return back();
         }
     }
 

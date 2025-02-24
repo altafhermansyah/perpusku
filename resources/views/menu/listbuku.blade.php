@@ -11,11 +11,9 @@
                             @foreach ($buku as $b)
                                 <div class="col-md-4">
                                     <div class="card">
-                                        <div class="d-flex justify-content-center mt-3">
-                                            <img src="{{ asset('storage/' . $b->gambar) }}" alt="{{ $b->judul }}"
-                                                class="rounded img-thumbnail w-75"
-                                                style="aspect-ratio: 1 / 1; object-fit: cover; cursor: pointer;"
-                                                data-bs-toggle="modal" data-bs-target="#imageModal{{ $b->id }}">
+                                        <div class="position-relative">
+                                            <a href="javascript:void(0)"><img src="{{ asset('storage/' . $b->gambar) }}" class="card-img-top rounded-0 rounded img-thumbnail" alt="..." style="aspect-ratio: 1 / 1; object-fit: cover; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $b->id }}"></a>
+                                            <a href="javascript:void(0)" class="bg-light rounded-circle p-3 text-dark d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-star fs-6"></i></a>
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $b->judul }} ({{ $b->tahunTerbit }})</h5>
@@ -32,9 +30,6 @@
                                                     data-bs-target="#pinjam{{ $b->id }}"><i
                                                         class="ti ti-vocabulary me-2"></i>Pinjam</button>
                                             @endif
-                                            <button type="button" class="btn btn-outline-dark m-1" data-bs-toggle="modal"
-                                                data-bs-target="#deleteData{{ $b->id }}"><i
-                                                    class="ti ti-folder-plus"></i></button>
                                         </div>
                                     </div>
                                 </div>

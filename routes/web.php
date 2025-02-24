@@ -48,6 +48,7 @@ Route::middleware('auth', 'peminjamMiddleware')->group(function(){
     Route::get('/iventaris', [PinjamController::class, 'iventaris'])->name('iventaris');
     Route::resource('list', PinjamController::class);
     Route::resource('ulasan', UlasanController::class);
+    Route::resource('peminjam', PeminjamController::class);
 });
 
 // // Admin and Petugas Routes

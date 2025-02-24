@@ -38,7 +38,8 @@
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $b->judul }} ({{ $b->tahunTerbit }})</h5>
                                             @foreach ($b->kategoribuku as $kb)
-                                                <span class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span>
+                                                <span
+                                                    class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span>
                                             @endforeach
                                             <p class="card-text mt-2">Penulis: <b>{{ $b->penulis }}</b></p>
 
@@ -66,18 +67,41 @@
                                                 @if ($b->ulasan->isEmpty())
                                                     <p class="text-muted">Belum ada ulasan untuk buku ini.</p>
                                                 @else
-                                                    <div class="list-group">
+                                                    <div class="list-group" style="max-height: 350px; overflow-y: auto;">
                                                         @foreach ($b->ulasan as $ulasan)
                                                             <div class="list-group-item">
                                                                 <h6 class="fw-bold">{{ $ulasan->user->name }}</h6>
                                                                 <p>⭐ {{ $ulasan->rating }}/5</p>
-                                                                <p>"{{ $ulasan->komentar }}"</p>
+                                                                <p>"{{ $ulasan->ulasan }}"</p>
                                                                 <small class="text-muted">Ditulis pada
                                                                     {{ \Carbon\Carbon::parse($ulasan->created_at)->format('d M Y') }}</small>
                                                             </div>
                                                         @endforeach
                                                     </div>
                                                 @endif
+                                                <form action="{{ route('ulasan.store') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="buku_id" value="{{ $b->id }}">
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Rating</label>
+                                                        <select name="rating" class="form-select" required>
+                                                            <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                                                            <option value="4">⭐⭐⭐⭐ (4)</option>
+                                                            <option value="3">⭐⭐⭐ (3)</option>
+                                                            <option value="2">⭐⭐ (2)</option>
+                                                            <option value="1">⭐ (1)</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Komentar</label>
+                                                        <textarea name="komentar" class="form-control" rows="3" required></textarea>
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-success">Kirim
+                                                        Ulasan</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -100,51 +124,50 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Modal untuk Ulasan -->
+                                <div class="modal fade" id="ulasanModal{{ $b->id }}" tabindex="-1"
+                                    aria-labelledby="ulasanModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Beri Ulasan untuk {{ $b->judul }}
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('ulasan.store') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="buku_id" value="{{ $b->id }}">
+                                                    <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Rating</label>
+                                                        <select name="rating" class="form-select" required>
+                                                            <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                                                            <option value="4">⭐⭐⭐⭐ (4)</option>
+                                                            <option value="3">⭐⭐⭐ (3)</option>
+                                                            <option value="2">⭐⭐ (2)</option>
+                                                            <option value="1">⭐ (1)</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Komentar</label>
+                                                        <textarea name="komentar" class="form-control" rows="3" required></textarea>
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-success">Kirim
+                                                        Ulasan</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
 
                             {{ $buku->links() }}
                         </div>
-
-                        {{-- <!-- Modal untuk Ulasan -->
-                        <div class="modal fade" id="ulasanModal{{ $p->buku->id }}" tabindex="-1"
-                            aria-labelledby="ulasanModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Beri Ulasan untuk {{ $p->buku->judul }}
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{ route('ulasan.store') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="buku_id" value="{{ $p->buku->id }}">
-                                            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-
-                                            <div class="mb-3">
-                                                <label class="form-label">Rating</label>
-                                                <select name="rating" class="form-select" required>
-                                                    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
-                                                    <option value="4">⭐⭐⭐⭐ (4)</option>
-                                                    <option value="3">⭐⭐⭐ (3)</option>
-                                                    <option value="2">⭐⭐ (2)</option>
-                                                    <option value="1">⭐ (1)</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label">Komentar</label>
-                                                <textarea name="komentar" class="form-control" rows="3" required></textarea>
-                                            </div>
-
-                                            <button type="submit" class="btn btn-success">Kirim
-                                                Ulasan</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>
