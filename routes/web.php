@@ -9,6 +9,7 @@ use App\Http\Controllers\Peminjam\PinjamController;
 use App\Http\Controllers\Peminjam\UlasanController;
 use App\Http\Controllers\Petugas\PetugasController;
 use App\Http\Controllers\Admin\PeminjamanController;
+use App\Http\Controllers\Peminjam\KoleksiController;
 use App\Http\Controllers\Peminjam\PeminjamController;
 
 Route::get('/', function () {
@@ -49,6 +50,7 @@ Route::middleware('auth', 'peminjamMiddleware')->group(function(){
     Route::resource('list', PinjamController::class);
     Route::resource('ulasan', UlasanController::class);
     Route::resource('peminjam', PeminjamController::class);
+    Route::resource('koleksi', KoleksiController::class);
 });
 
 // // Admin and Petugas Routes

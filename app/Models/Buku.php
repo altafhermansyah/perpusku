@@ -24,4 +24,8 @@ class Buku extends Model
     {
         return $this->hasMany(Ulasan::class);
     }
+    public function koleksi()
+    {
+        return $this->hasMany(Koleksi::class);
+    }
 }

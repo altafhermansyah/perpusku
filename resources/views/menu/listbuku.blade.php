@@ -12,13 +12,36 @@
                                 <div class="col-md-4">
                                     <div class="card">
                                         <div class="position-relative">
-                                            <a href="javascript:void(0)"><img src="{{ asset('storage/' . $b->gambar) }}" class="card-img-top rounded-0 rounded img-thumbnail" alt="..." style="aspect-ratio: 1 / 1; object-fit: cover; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $b->id }}"></a>
-                                            <a href="javascript:void(0)" class="bg-light rounded-circle p-3 text-dark d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-star fs-6"></i></a>
+                                            <a href="javascript:void(0)"><img src="{{ asset('storage/' . $b->gambar) }}"
+                                                    class="card-img-top rounded-0 rounded img-thumbnail" alt="..."
+                                                    style="aspect-ratio: 1 / 1; object-fit: cover; cursor: pointer;"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#imageModal{{ $b->id }}"></a>
+                                            {{-- <a href="javascript:void(0)"
+                                                class="btn btn-light rounded-circle p-3 text-dark d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3 toggle-koleksi"
+                                                data-buku-id="{{ $b->id }}" data-in-koleksi="{{ $isInKoleksi }}">
+                                                <i class="ti ti-star fs-6 {{ $isInKoleksi ? 'text-warning' : '' }}"></i>
+                                            </a> --}}
+                                            <form id="koleksi-form-{{ $b->id }}"
+                                                action="{{ route('koleksi.store') }}" method="POST" style="display: none;">
+                                                @csrf
+                                                <input type="hidden" name="buku_id" value="{{ $b->id }}">
+                                            </form>
+                                            @php
+                                                $isInKoleksi = Auth::user()->koleksi->contains('buku_id', $b->id);
+                                            @endphp
+                                            <a href="javascript:void(0)"
+                                                class="btn btn-light rounded-circle p-3 text-dark d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3 toggle-koleksi"
+                                                data-buku-id="{{ $b->id }}"
+                                                onclick="submitKoleksiForm({{ $b->id }})">
+                                                <i class="ti ti-star fs-6 {{ $isInKoleksi ? 'text-warning' : '' }}"></i>
+                                            </a>
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $b->judul }} ({{ $b->tahunTerbit }})</h5>
                                             @foreach ($b->kategoribuku as $kb)
-                                                <span class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span>
+                                                <span
+                                                    class="badge bg-primary rounded-3 m-1">{{ $kb->kategori->nama }}</span>
                                             @endforeach
                                             <p class="card-text mt-2">Penulis: <b>{{ $b->penulis }}</b></p>
                                             @if ($b->peminjaman->contains('user_id', Auth::id()))
@@ -84,4 +107,29 @@
             </div>
         </div>
     @endforeach
+    <script>
+        function submitKoleksiForm(bukuId) {
+            let form = document.getElementById(`koleksi-form-${bukuId}`);
+            let formData = new FormData(form);
+            let button = document.querySelector(`.toggle-koleksi[data-buku-id="${bukuId}"]`);
+            let icon = button.querySelector('i');
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'added') {
+                    icon.classList.add('text-warning');
+                } else if (data.status === 'removed') {
+                    icon.classList.remove('text-warning');
+                }
+            });
+        }
+    </script>
+
 @endsection

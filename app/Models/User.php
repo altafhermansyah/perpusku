@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Ulasan;
+use App\Models\Koleksi;
 use App\Models\Peminjaman;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,5 +59,9 @@ class User extends Authenticatable
     public function ulasan()
     {
         return $this->hasMany(Ulasan::class);
+    }
+    public function koleksi()
+    {
+        return $this->hasMany(Koleksi::class);
     }
 }
